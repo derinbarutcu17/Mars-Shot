@@ -11,7 +11,7 @@
             background-color: #050510;
             color: #fff;
             font-family: 'Courier New', Courier, monospace;
-            touch-action: none; /* Prevent zoom on mobile */
+            touch-action: none;
             user-select: none;
         }
         #gameCanvas {
@@ -24,7 +24,40 @@
             pointer-events: none;
             z-index: 5;
             text-shadow: 1px 1px 2px black;
+            width: 100%;
+            box-sizing: border-box;
+            padding-right: 40px;
         }
+        /* Top Center Level Selector */
+        #levelSelectContainer {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            pointer-events: auto;
+            z-index: 6;
+        }
+        #levelSelect {
+            background-color: #9d00ff;
+            color: white;
+            border: 2px solid #fff;
+            padding: 8px 15px;
+            font-family: inherit;
+            font-weight: bold;
+            font-size: 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            outline: none;
+            text-align: center;
+        }
+        #levelSelect:hover {
+            background-color: #b84dff;
+        }
+        #levelSelect option {
+            background-color: #222;
+            color: #fff;
+        }
+
         h1 {
             margin: 0;
             font-size: 24px;
@@ -43,7 +76,7 @@
             border: 1px solid #fff;
             border-radius: 5px;
             overflow: hidden;
-            display: none; /* Hidden until launch */
+            display: none; 
         }
         #fuelBar {
             width: 100%;
@@ -51,10 +84,9 @@
             background: #ffaa00;
             transition: width 0.1s;
         }
-        #levelText {
-            color: #ffff00;
-            font-weight: bold;
-        }
+        #coinText { color: #ffd700; font-weight: bold; }
+        
+        /* Message Modal */
         #message {
             position: absolute;
             top: 50%;
@@ -77,10 +109,6 @@
             text-transform: uppercase;
             letter-spacing: 2px;
         }
-        #message p {
-            font-size: 16px;
-            color: #eee;
-        }
         .btn {
             pointer-events: auto;
             background: linear-gradient(180deg, #00d2ff 0%, #0078ff 100%);
@@ -96,95 +124,126 @@
             box-shadow: 0 4px 0 #0056b3;
             transition: transform 0.1s;
         }
-        .btn:active {
-            transform: translateY(4px);
-            box-shadow: none;
+        .btn:active { transform: translateY(4px); box-shadow: none; }
+        .green-btn { background: linear-gradient(180deg, #44ff44 0%, #00aa00 100%); box-shadow: 0 4px 0 #006600; }
+        
+        /* Store Modal */
+        #storeModal {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(10, 10, 20, 0.98);
+            border: 2px solid #ffd700;
+            padding: 20px;
+            border-radius: 10px;
+            display: none;
+            z-index: 20;
+            width: 300px;
+            text-align: center;
         }
-        .ai-btn {
-            background: linear-gradient(180deg, #b84dff 0%, #7300ff 100%);
-            box-shadow: 0 4px 0 #4a00a3;
-            margin-left: 10px;
+        .upgrade-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 10px 0;
+            border-bottom: 1px solid #333;
+            padding-bottom: 10px;
         }
-        #aiPanel {
+        .upgrade-info { text-align: left; }
+        .upgrade-name { font-weight: bold; color: #fff; display: block;}
+        .upgrade-cost { font-size: 12px; color: #ffd700; }
+        .buy-btn {
+            background: #333;
+            color: #fff;
+            border: 1px solid #555;
+            padding: 5px 10px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .buy-btn:hover { background: #444; }
+
+        /* Replay Button */
+        #resetLevelBtn {
             position: absolute;
             bottom: 20px;
             left: 20px;
-            width: 300px;
-            pointer-events: none;
-        }
-        #aiText {
-            background: rgba(10, 5, 20, 0.9);
-            border-left: 4px solid #9d00ff;
-            padding: 10px;
-            font-size: 13px;
-            line-height: 1.4;
-            color: #e0b0ff;
-            min-height: 20px;
-            opacity: 0;
-            transition: opacity 0.5s;
-            margin-top: 5px;
-            border-radius: 0 4px 4px 0;
-        }
-        #aiText.visible {
-            opacity: 1;
-        }
-        #flightAiBtn {
-            pointer-events: auto;
-            background: rgba(0, 0, 0, 0.5);
-            border: 1px solid #9d00ff;
-            color: #d48aff;
-            padding: 6px 12px;
-            font-size: 12px;
+            background: rgba(255, 50, 50, 0.2);
+            border: 1px solid #ff4444;
+            color: #ffaaaa;
+            padding: 8px 15px;
             cursor: pointer;
-            transition: all 0.2s;
-            border-radius: 15px;
+            font-family: inherit;
+            font-weight: bold;
+            pointer-events: auto;
+            z-index: 5;
+            transition: background 0.2s;
         }
-        #flightAiBtn:hover {
-            background: #9d00ff;
-            color: white;
+        #resetLevelBtn:hover { background: rgba(255, 50, 50, 0.5); color: #fff; }
+
+        #storeToggleBtn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(255, 215, 0, 0.2);
+            border: 1px solid #ffd700;
+            color: #ffd700;
+            padding: 8px 15px;
+            cursor: pointer;
+            font-family: inherit;
+            font-weight: bold;
+            pointer-events: auto;
+            z-index: 5;
         }
-        .loading {
-            animation: pulse 1s infinite;
-        }
-        @keyframes pulse {
-            0% { opacity: 0.5; }
-            50% { opacity: 1; }
-            100% { opacity: 0.5; }
-        }
+        #storeToggleBtn:hover { background: rgba(255, 215, 0, 0.5); color: #fff; }
+
     </style>
 </head>
 <body>
 
+<div id="levelSelectContainer">
+    <select id="levelSelect" onchange="changeLevel(this.value)">
+        <option value="1">Level 1</option>
+        <option value="2">Level 2</option>
+        <option value="3">Level 3</option>
+        <option value="4">Level 4</option>
+    </select>
+</div>
+
 <div id="ui">
     <h1>MARS SHOT</h1>
-    <p>Mission: <span id="levelText">Level 1</span></p>
+    <p>Coins: <span id="coinText">0</span></p>
     <p>Status: <span id="statusText">Waiting for launch...</span></p>
-    <p>Closest Approach: <span id="distanceText">--</span></p>
+    <p>Closest: <span id="distanceText">--</span></p>
     <div id="fuelBarContainer">
         <div id="fuelBar"></div>
     </div>
-    <p>Score: <span id="scoreText">0</span></p>
 </div>
 
-<div id="aiPanel">
-    <button id="flightAiBtn">Ask Flight Computer ✨</button>
-    <div id="aiText">System ready.</div>
+<button id="resetLevelBtn">↺ RESET LEVEL</button>
+<button id="storeToggleBtn">WORKSHOP</button>
+
+<!-- Store Modal -->
+<div id="storeModal">
+    <h2 style="color:#ffd700; margin-top:0;">WORKSHOP</h2>
+    <div id="upgradesList">
+        <!-- Generated by JS -->
+    </div>
+    <button class="btn" onclick="closeStore()">Close</button>
 </div>
 
+<!-- End Game Modal -->
 <div id="message">
     <h2 id="msgTitle">MISSION COMPLETE</h2>
     <p id="msgSub">Score: 100</p>
-    <div id="missionLog" style="margin-top: 15px; font-size: 14px; color: #d48aff; font-style: italic; min-height: 20px;"></div>
     <br>
-    <button class="btn ai-btn" id="reportBtn">Gen. Report ✨</button>
     <button class="btn" id="retryBtn">Try Again</button>
-    <button class="btn" id="nextLevelBtn" style="display:none; background: linear-gradient(180deg, #44ff44 0%, #00aa00 100%); margin-left:10px;">Next Level</button>
+    <button class="btn green-btn" id="nextLevelBtn" style="display:none; margin-left:10px;">Next Level</button>
 </div>
 
 <canvas id="gameCanvas"></canvas>
 
 <script>
-// Wrap in IIFE to avoid global scope pollution
 (function() {
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
@@ -192,8 +251,8 @@
     // UI Elements
     const statusText = document.getElementById('statusText');
     const distanceText = document.getElementById('distanceText');
-    const scoreText = document.getElementById('scoreText');
-    const levelText = document.getElementById('levelText');
+    const levelSelect = document.getElementById('levelSelect');
+    const coinText = document.getElementById('coinText');
     const fuelBarContainer = document.getElementById('fuelBarContainer');
     const fuelBar = document.getElementById('fuelBar');
     const messageOverlay = document.getElementById('message');
@@ -201,136 +260,59 @@
     const msgSub = document.getElementById('msgSub');
     const retryBtn = document.getElementById('retryBtn');
     const nextLevelBtn = document.getElementById('nextLevelBtn');
-    
-    // AI UI Elements
-    const flightAiBtn = document.getElementById('flightAiBtn');
-    const aiText = document.getElementById('aiText');
-    const reportBtn = document.getElementById('reportBtn');
-    const missionLog = document.getElementById('missionLog');
+    const resetLevelBtn = document.getElementById('resetLevelBtn');
+    const storeModal = document.getElementById('storeModal');
+    const storeToggleBtn = document.getElementById('storeToggleBtn');
+    const upgradesList = document.getElementById('upgradesList');
 
     let width, height, cx, cy;
     let animationFrameId;
 
     // Game Constants
-    const G = 0.5;
+    const G = 0.35; // Lowered gravity
     const SUN_MASS = 5000;
     const EARTH_MASS = 100;
     const MARS_MASS = 80;
-    const MIN_LAUNCH_FORCE = 2.0;
-    const MAX_LAUNCH_FORCE = 7.0;
+    const SATURN_MASS = 200;
+    const MOON_MASS = 10;
     const MAX_INPUT_DIST = 400; 
-    const MAX_FUEL = 100;
-    const THRUST_POWER = 0.2;
+
+    // Stats & Upgrades
+    let coins = 0;
+    let upgrades = {
+        fuel: { level: 1, cost: 50, name: "Fuel Tank", max: 5 },
+        thrust: { level: 1, cost: 80, name: "Ion Engine", max: 5 },
+        launch: { level: 1, cost: 60, name: "Catapult", max: 5 }
+    };
+
+    function getStats() {
+        return {
+            maxFuel: 100 + (upgrades.fuel.level - 1) * 30,
+            // Reduced thrust power by 50% (0.2 -> 0.1)
+            thrustPower: 0.1 + (upgrades.thrust.level - 1) * 0.025,
+            launchForceMin: 1.5,
+            launchForceMax: 5.0 + (upgrades.launch.level - 1) * 1.0 
+        };
+    }
 
     // Game State
     let bodies = [];
     let rocket = null;
-    let ghostTrail = []; // Stores the previous attempt
+    let ghostTrail = [];
     let particles = [];
     let gameState = 'IDLE';
     let closestDist = Infinity;
-    let score = 0;
     let level = 1;
     let stars = [];
-    let lastEndReason = '';
     let shakeStrength = 0;
     let isThrusting = false;
 
-    // Mouse tracking for aiming
+    // Mouse tracking
     let mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
-
-    // API Key
-    const apiKey = ""; // Injected by environment
-
-    // --- Gemini API Integration ---
-
-    async function generateContent(prompt) {
-        if (!apiKey) {
-            console.warn("API Key missing");
-            return "Comms Offline: API Key missing.";
-        }
-        
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
-        
-        try {
-            const response = await fetch(url, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    contents: [{ parts: [{ text: prompt }] }]
-                })
-            });
-            
-            if (!response.ok) throw new Error(`API Error: ${response.status}`);
-            
-            const data = await response.json();
-            return data.candidates[0].content.parts[0].text;
-        } catch (error) {
-            console.error(error);
-            return "Comms Interference: Unable to reach command.";
-        }
-    }
-
-    async function callFlightAI() {
-        if (gameState !== 'IDLE') return;
-        
-        let earth = bodies.find(b => b.type === 'target_start');
-        let mars = bodies.find(b => b.type === 'target_end');
-        let sun = bodies.find(b => b.type === 'sun');
-        
-        let angleEarth = Math.atan2(earth.pos.y - sun.pos.y, earth.pos.x - sun.pos.x);
-        let angleMars = Math.atan2(mars.pos.y - sun.pos.y, mars.pos.x - sun.pos.x);
-        let diff = angleMars - angleEarth; // radians
-
-        aiText.innerText = "Calculating trajectory...";
-        aiText.classList.add('visible', 'loading');
-        
-        const prompt = `You are the AI flight computer of a spacecraft waiting to launch from Earth to Mars. 
-        Level: ${level}.
-        The current angular difference between Earth and Mars is ${diff.toFixed(2)} radians.
-        Give a very short (max 15 words), technobabble-heavy status update about whether the launch window is opening. 
-        Sound cool and sci-fi.`;
-
-        const text = await generateContent(prompt);
-        aiText.innerText = text;
-        aiText.classList.remove('loading');
-    }
-
-    async function generateMissionReport() {
-        missionLog.innerText = "Compiling logs...";
-        missionLog.classList.add('loading');
-
-        let context = "";
-        if (lastEndReason === 'landed') {
-            context = "The player successfully landed on Mars. It was a perfect shot.";
-        } else if (lastEndReason === 'crashed') {
-            context = "The player crashed the rocket into a planet or asteroid.";
-        } else {
-            context = `The player missed Mars and drifted into deep space. Closest approach was ${Math.floor(closestDist)} units.`;
-        }
-
-        const prompt = `You are a sci-fi Mission Control narrator. 
-        Level: ${level}.
-        Game Event: ${context}
-        Score: ${score}/100.
-        
-        Write a 1-sentence "News Headline" about this event, followed by a witty or dramatic remark from Mission Control. 
-        Keep it under 30 words total.`;
-
-        const text = await generateContent(prompt);
-        missionLog.innerText = text;
-        missionLog.classList.remove('loading');
-    }
-
-    // --- End API Integration ---
 
     class Vector {
         constructor(x, y) { this.x = x; this.y = y; }
-        add(v) { 
-            if(v) {
-                this.x += v.x; this.y += v.y; 
-            }
-        }
+        add(v) { if(v) { this.x += v.x; this.y += v.y; } }
         sub(v) { return new Vector(this.x - v.x, this.y - v.y); }
         mult(n) { this.x *= n; this.y *= n; }
         mag() { return Math.sqrt(this.x * this.x + this.y * this.y); }
@@ -354,17 +336,38 @@
             this.type = type;
             this.trail = [];
             
-            // Movement parameters for moving obstacles
+            // Orbit params (On-Rails)
+            this.orbitCenter = null;
+            this.parentBody = null; // For moons
+            this.orbitRadius = 0;
+            this.orbitAngle = Math.random() * Math.PI * 2;
+            this.orbitSpeed = 0;
+
+            // Oscillation params
             this.startPos = new Vector(x, y);
             this.oscillate = false;
-            this.oscillateSpeed = 0.05;
-            this.oscillateDist = 100;
+            this.oscillateSpeed = 0.0;
+            this.oscillateDist = 0;
             this.timeOffset = 0;
-            
-            // Rocket specific
-            this.fuel = MAX_FUEL;
+
+            // Rocket params
+            this.fuel = 0;
             this.angle = 0;
-            this.age = 0; // Fix: Track age to prevent instant collisions
+            this.age = 0;
+
+            // Asteroid Shape (Jagged)
+            this.shapeVertices = [];
+            if (this.type === 'obstacle') {
+                let numPoints = 6 + Math.floor(Math.random() * 4); // 6 to 9 points
+                for (let i = 0; i < numPoints; i++) {
+                    let angle = (i / numPoints) * Math.PI * 2;
+                    let r = this.radius * (0.7 + Math.random() * 0.6); // Random variation
+                    this.shapeVertices.push({
+                        x: Math.cos(angle) * r,
+                        y: Math.sin(angle) * r
+                    });
+                }
+            }
         }
 
         applyForce(f) {
@@ -374,11 +377,22 @@
         }
 
         update() {
-            if (this.oscillate) {
-                // Simple vertical oscillation for obstacles
-                this.pos.y = this.startPos.y + Math.sin((frameCount * this.oscillateSpeed) + this.timeOffset) * this.oscillateDist;
-                this.vel = new Vector(0, Math.cos((frameCount * this.oscillateSpeed) + this.timeOffset) * this.oscillateSpeed * this.oscillateDist);
-            } else {
+            // Planet On-Rails Logic
+            if (this.orbitCenter) {
+                this.orbitAngle += this.orbitSpeed;
+                this.pos.x = this.orbitCenter.x + Math.cos(this.orbitAngle) * this.orbitRadius;
+                this.pos.y = this.orbitCenter.y + Math.sin(this.orbitAngle) * this.orbitRadius;
+                this.vel.x = -Math.sin(this.orbitAngle) * this.orbitRadius * this.orbitSpeed;
+                this.vel.y = Math.cos(this.orbitAngle) * this.orbitRadius * this.orbitSpeed;
+            } else if (this.parentBody) {
+                // Moon/Ring Logic (Relative to parent)
+                this.orbitAngle += this.orbitSpeed;
+                this.pos.x = this.parentBody.pos.x + Math.cos(this.orbitAngle) * this.orbitRadius;
+                this.pos.y = this.parentBody.pos.y + Math.sin(this.orbitAngle) * this.orbitRadius;
+                this.vel.x = this.parentBody.vel.x - Math.sin(this.orbitAngle) * this.orbitRadius * this.orbitSpeed;
+                this.vel.y = this.parentBody.vel.y + Math.cos(this.orbitAngle) * this.orbitRadius * this.orbitSpeed;
+            } else if (!this.isStatic) {
+                // Physics movement
                 this.vel.add(this.acc);
                 this.pos.add(this.vel);
             }
@@ -386,8 +400,12 @@
             this.acc.mult(0); 
             
             if (this.type === 'rocket') {
-                this.age++; // Increment age
-                if(this.vel.mag() > 0.1) {
+                this.age++;
+                if (isThrusting) {
+                    let target = new Vector(mouse.x, mouse.y);
+                    let dir = target.sub(this.pos);
+                    this.angle = dir.heading();
+                } else if(this.vel.mag() > 0.1) {
                     this.angle = this.vel.heading();
                 }
             }
@@ -395,20 +413,33 @@
             if (this.type === 'planet' || this.type === 'rocket') {
                 if (frameCount % 5 === 0) {
                     this.trail.push({x: this.pos.x, y: this.pos.y});
-                    
-                    // Fix: Increased trail limit significantly for rocket to ensure ghost trail works
-                    let limit = this.type === 'rocket' ? 500 : 60;
+                    let limit = this.type === 'rocket' ? 600 : 60;
                     if (this.trail.length > limit) this.trail.shift();
                 }
             }
         }
 
         draw() {
-            if (!Number.isFinite(this.pos.x) || !Number.isFinite(this.pos.y) || !Number.isFinite(this.radius)) {
-                return;
+            if (!Number.isFinite(this.pos.x) || !Number.isFinite(this.pos.y)) return;
+
+            // Draw Dashed Orbit Line for Planets (Excluding tiny ring asteroids)
+            if ((this.orbitCenter || (this.parentBody && this.type === 'moon')) && this.type !== 'obstacle') {
+                ctx.beginPath();
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+                ctx.lineWidth = 1;
+                ctx.setLineDash([5, 10]);
+                
+                if (this.orbitCenter) {
+                    ctx.arc(this.orbitCenter.x, this.orbitCenter.y, this.orbitRadius, 0, Math.PI * 2);
+                } else if (this.parentBody) {
+                    ctx.arc(this.parentBody.pos.x, this.parentBody.pos.y, this.orbitRadius, 0, Math.PI * 2);
+                }
+                
+                ctx.stroke();
+                ctx.setLineDash([]);
             }
 
-            // Draw Trail
+            // Trail
             if (this.trail.length > 1) {
                 ctx.beginPath();
                 ctx.strokeStyle = this.type === 'rocket' ? '#fff' : this.color;
@@ -421,39 +452,65 @@
                 ctx.globalAlpha = 1.0;
             }
 
-            // Draw Rocket Differently
+            // --- ROCKET DRAWING ---
             if (this.type === 'rocket') {
                 ctx.save();
                 ctx.translate(this.pos.x, this.pos.y);
                 ctx.rotate(this.angle);
                 
-                // Draw Engine Flame
                 if (isThrusting && this.fuel > 0) {
                     ctx.beginPath();
-                    ctx.moveTo(-10, -3);
-                    ctx.lineTo(-20 - Math.random() * 10, 0);
-                    ctx.lineTo(-10, 3);
+                    ctx.moveTo(-10, -2);
+                    ctx.lineTo(-20 - Math.random() * 8, 0);
+                    ctx.lineTo(-10, 2);
                     ctx.fillStyle = '#ffaa00';
                     ctx.fill();
                 }
 
-                // Draw Ship
                 ctx.beginPath();
-                ctx.moveTo(10, 0);
-                ctx.lineTo(-8, -6);
-                ctx.lineTo(-8, 6);
-                ctx.closePath();
-                ctx.fillStyle = '#fff';
+                ctx.ellipse(0, 0, 10, 4, 0, 0, Math.PI*2);
+                ctx.fillStyle = '#eee';
+                ctx.fill();
+                ctx.beginPath();
+                ctx.moveTo(-4, -4);
+                ctx.lineTo(-12, -8);
+                ctx.lineTo(-8, 0);
+                ctx.lineTo(-12, 8);
+                ctx.lineTo(-4, 4);
+                ctx.fillStyle = '#cc3333';
+                ctx.fill();
+                ctx.beginPath();
+                ctx.ellipse(3, 0, 3, 2, 0, 0, Math.PI*2);
+                ctx.fillStyle = '#00d2ff';
                 ctx.fill();
                 
                 ctx.restore();
                 return;
             }
 
-            // Draw Planets/Sun
+            // --- ASTEROID DRAWING ---
+            if (this.type === 'obstacle' && this.shapeVertices.length > 0) {
+                ctx.save();
+                ctx.translate(this.pos.x, this.pos.y);
+                ctx.rotate(this.orbitAngle * 2); // Slight self-rotation effect based on orbit
+                ctx.beginPath();
+                ctx.moveTo(this.shapeVertices[0].x, this.shapeVertices[0].y);
+                for (let i = 1; i < this.shapeVertices.length; i++) {
+                    ctx.lineTo(this.shapeVertices[i].x, this.shapeVertices[i].y);
+                }
+                ctx.closePath();
+                ctx.fillStyle = this.color;
+                ctx.fill();
+                // Add texture detail
+                ctx.strokeStyle = 'rgba(0,0,0,0.3)';
+                ctx.stroke();
+                ctx.restore();
+                return;
+            }
+
+            // --- PLANET DRAWING ---
             // Atmosphere/Glow
-            if (this.type === 'sun' || this.type === 'target_start' || this.type === 'target_end') {
-                let glowColor = this.color;
+            if (this.type === 'sun' || this.type === 'target_start' || this.type === 'target_end' || this.type === 'saturn') {
                 let glowSize = this.radius * 2;
                 let g = ctx.createRadialGradient(this.pos.x, this.pos.y, this.radius, this.pos.x, this.pos.y, glowSize);
                 g.addColorStop(0, this.color);
@@ -473,17 +530,24 @@
 
             if (this.type === 'sun') {
                 grad.addColorStop(0, '#fff');
-                grad.addColorStop(0.2, '#fff700');
                 grad.addColorStop(1, '#ff8800');
                 ctx.shadowBlur = 40;
                 ctx.shadowColor = '#ff8800';
-            } else if (this.type === 'target_start') { // Earth
+            } else if (this.type === 'target_start') {
                 grad.addColorStop(0, '#88ccff');
                 grad.addColorStop(1, '#0055aa');
                 ctx.shadowBlur = 0;
-            } else if (this.type === 'target_end') { // Mars
+            } else if (this.type === 'target_end') {
                 grad.addColorStop(0, '#ff8888');
                 grad.addColorStop(1, '#aa2222');
+                ctx.shadowBlur = 0;
+            } else if (this.type === 'saturn') {
+                grad.addColorStop(0, '#f4d03f');
+                grad.addColorStop(1, '#b7950b');
+                ctx.shadowBlur = 0;
+            } else if (this.type === 'moon') {
+                grad.addColorStop(0, '#ddd');
+                grad.addColorStop(1, '#888');
                 ctx.shadowBlur = 0;
             } else {
                 grad.addColorStop(0, '#aaa');
@@ -549,82 +613,125 @@
     function createSolarSystem() {
         bodies = [];
         
-        // Sun (Always present)
+        // --- 1. THE SUN ---
         let sun = new Body(cx, cy, SUN_MASS, 30, '#ffd700', true, 'sun');
         bodies.push(sun);
 
-        // --- LEVEL CONFIGURATION ---
-        
-        let r1 = Math.min(width, height) * 0.25;
+        // --- 2. EARTH & MOON ---
+        let r1 = Math.min(width, height) * 0.22;
         let earth = new Body(cx + r1, cy, EARTH_MASS, 10, '#4facfe', false, 'target_start');
-        let v1 = Math.sqrt((G * SUN_MASS) / r1);
-        earth.vel = new Vector(0, v1); 
+        earth.orbitCenter = new Vector(cx, cy);
+        earth.orbitRadius = r1;
+        earth.orbitAngle = 0; // Earth starts at 0
+        earth.orbitSpeed = 0.005; 
         bodies.push(earth);
 
-        // Mars Setup
-        let r2 = Math.min(width, height) * 0.38;
-        let marsAngle = 0; 
-        if (level === 4) marsAngle = Math.PI; 
+        let moon = new Body(cx + r1 + 25, cy, MOON_MASS, 3, '#ccc', false, 'moon');
+        moon.parentBody = earth;
+        moon.orbitRadius = 25;
+        moon.orbitSpeed = 0.08; 
+        bodies.push(moon);
 
-        let mx = cx + Math.cos(marsAngle) * -r2; 
-        if (level === 4) mx = cx + r2; 
+        // --- 3. MARS ---
+        let r2 = Math.min(width, height) * 0.35;
+        let startAngle = Math.PI; // ALWAYS OPPOSITE (180 degrees)
         
-        let mars = new Body(mx, cy, MARS_MASS, 9, '#ff5e62', false, 'target_end');
-        let v2 = Math.sqrt((G * SUN_MASS) / r2);
-        mars.vel = new Vector(0, level === 4 ? v2 : -v2); 
+        let mars = new Body(cx, cy, MARS_MASS, 9, '#ff5e62', false, 'target_end');
+        mars.orbitCenter = new Vector(cx, cy);
+        mars.orbitRadius = r2;
+        mars.orbitAngle = startAngle;
+        mars.orbitSpeed = 0.003;
         bodies.push(mars);
 
-        // Obstacles
-        let r3 = Math.min(width, height) * 0.32;
+        // --- 4. SATURN & RINGS (Level 4 feature, or distant background) ---
+        // We add Saturn always but make it interactable
+        let rSaturn = Math.min(width, height) * 0.48; 
+        let saturn = new Body(cx, cy, SATURN_MASS, 18, '#f4d03f', false, 'saturn');
+        saturn.orbitCenter = new Vector(cx, cy);
+        saturn.orbitRadius = rSaturn;
+        saturn.orbitAngle = Math.PI / 2;
+        saturn.orbitSpeed = 0.001;
+        bodies.push(saturn);
+
+        // Saturn's Ring/Belt (Small deadly rocks)
+        let ringCount = 12;
+        for (let i = 0; i < ringCount; i++) {
+            let ringRock = new Body(0, 0, 5, 2, '#8d6e63', false, 'obstacle'); // small rocks
+            ringRock.parentBody = saturn;
+            ringRock.orbitRadius = 30 + Math.random() * 10;
+            ringRock.orbitAngle = (i / ringCount) * Math.PI * 2;
+            ringRock.orbitSpeed = 0.05 + Math.random() * 0.02;
+            bodies.push(ringRock);
+        }
+
+        // --- 5. ASTEROID OBSTACLES (Sun Orbiting) ---
+        // Scaling difficulty based on Level
+        // Level 1: 3 small, Level 2: 7 med, Level 3: 12 large, Level 4: 18 mixed
+        
+        let asteroidCount = 0;
+        let minSize = 5;
+        let maxSize = 10;
+        let orbitZoneStart = r1 + 30; // Between Earth
+        let orbitZoneEnd = r2 - 30;   // And Mars
 
         if (level === 1) {
-            let asteroid = new Body(cx, cy + r3, 20, 6, '#888', false, 'obstacle');
-            let v3 = Math.sqrt((G * SUN_MASS) / r3) * 0.95; 
-            asteroid.vel = new Vector(-v3, 0);
-            bodies.push(asteroid);
+            asteroidCount = 3;
+            minSize = 6; maxSize = 10;
         } else if (level === 2) {
-            for(let i=-1; i<=1; i++) {
-                 let a = new Body(cx + (i*30), cy + r3, 20, 5, '#888', false, 'obstacle');
-                 let v = Math.sqrt((G * SUN_MASS) / r3) * 0.95; 
-                 a.vel = new Vector(-v, 0);
-                 bodies.push(a);
-            }
+            asteroidCount = 8;
+            minSize = 8; maxSize = 14;
         } else if (level === 3) {
-            let sentry = new Body(cx - 50, cy + r3, 20, 7, '#ff0000', true, 'obstacle'); 
-            sentry.oscillate = true;
-            sentry.oscillateDist = 120;
-            sentry.oscillateSpeed = 0.03;
-            bodies.push(sentry);
+            asteroidCount = 14;
+            minSize = 10; maxSize = 18;
         } else if (level === 4) {
-             let block = new Body(cx, cy - 60, 20, 5, '#888', true, 'obstacle');
-             bodies.push(block);
+            asteroidCount = 20;
+            minSize = 8; maxSize = 22;
+            // Also put some between Mars and Saturn for Lvl 4 overshoot risk
+            orbitZoneEnd = rSaturn - 30; 
+        }
+
+        for (let i = 0; i < asteroidCount; i++) {
+            let size = minSize + Math.random() * (maxSize - minSize);
+            let asteroid = new Body(0, 0, 20, size, '#777', false, 'obstacle');
+            
+            asteroid.orbitCenter = new Vector(cx, cy);
+            // Random distance from sun within the zone
+            asteroid.orbitRadius = orbitZoneStart + Math.random() * (orbitZoneEnd - orbitZoneStart);
+            asteroid.orbitAngle = Math.random() * Math.PI * 2;
+            // Random speed and direction
+            let speed = 0.002 + Math.random() * 0.004;
+            if (Math.random() > 0.5) speed *= -1; // some orbit clockwise
+            asteroid.orbitSpeed = speed;
+            
+            bodies.push(asteroid);
         }
     }
 
-    // action: 'reset' (full wipe), 'next' (level up), 'stay' (retry level)
+    // Exposed to global scope for the select element
+    window.changeLevel = function(val) {
+        level = parseInt(val);
+        resetGame('stay');
+    }
+
     function resetGame(action) {
         if (action === 'reset') {
             level = 1;
-            score = 0;
             ghostTrail = [];
         } else if (action === 'next') {
             level++;
-            ghostTrail = []; // Clear ghost on new level
-            if (level > 4) {
-                level = 1; // Loop back or could end game
-                score += 1000; // Bonus for beating loop
-            }
-        } 
-        // 'stay' keeps level and ghostTrail
+            ghostTrail = [];
+            if (level > 4) level = 1;
+        }
         
-        levelText.innerText = level === 4 ? "Level 4 (MAX)" : "Level " + level;
+        // Sync Selector UI
+        levelSelect.value = level;
+        
+        coinText.innerText = coins;
         
         gameState = 'IDLE';
         messageOverlay.style.display = 'none';
-        missionLog.innerText = ''; 
-        aiText.innerText = 'System ready.'; 
-        aiText.classList.remove('visible');
-        nextLevelBtn.style.display = 'none'; // Ensure next button is hidden on reset
+        nextLevelBtn.style.display = 'none';
+        storeModal.style.display = 'none';
         
         rocket = null;
         closestDist = Infinity;
@@ -632,7 +739,7 @@
         fuelBarContainer.style.display = 'none';
         
         createSolarSystem();
-        statusText.innerText = "Aim & Click to Launch";
+        statusText.innerText = "Aim & Drag to Launch";
         statusText.style.color = "#fff";
     }
 
@@ -641,80 +748,80 @@
         for(let i=0; i<30; i++) {
             particles.push(new Particle(x, y, color));
         }
-        for(let i=0; i<10; i++) {
-            particles.push(new Particle(x, y, '#fff'));
-        }
     }
 
     function calculateGravity() {
-        // Planet Physics
-        for (let i = 0; i < bodies.length; i++) {
-            for (let j = 0; j < bodies.length; j++) {
-                if (i !== j && !bodies[i].isStatic && !bodies[i].oscillate) {
-                    let force = bodies[j].pos.sub(bodies[i].pos);
-                    let dist = force.mag();
-                    if (dist < 5) dist = 5; 
-                    force.normalize();
-                    let strength = (G * bodies[j].mass * bodies[i].mass) / (dist * dist);
-                    force.mult(strength);
-                    bodies[i].applyForce(force);
+        if (!rocket) return;
+        
+        const stats = getStats();
+
+        // Apply Manual Thrust
+        if (isThrusting && rocket.fuel > 0) {
+            let target = new Vector(mouse.x, mouse.y);
+            let force = target.sub(rocket.pos); 
+            force.normalize();
+            force.mult(stats.thrustPower); 
+            rocket.applyForce(force);
+            rocket.fuel -= 0.5; 
+            if(rocket.fuel < 0) rocket.fuel = 0;
+            
+            if (frameCount % 3 === 0) {
+                    let exhaust = force.copy();
+                    exhaust.mult(-5); 
+                    particles.push(new Particle(rocket.pos.x, rocket.pos.y, '#ffaa00'));
+            }
+        }
+        
+        // Update Fuel UI
+        let fuelPct = (rocket.fuel / stats.maxFuel) * 100;
+        fuelBar.style.width = `${fuelPct}%`;
+
+        // Apply Gravity from all bodies to Rocket
+        for (let b of bodies) {
+            if (b.type === 'rocket') continue; 
+            
+            let force = b.pos.sub(rocket.pos);
+            let dist = force.mag();
+            force.normalize();
+            let strength = (G * b.mass * 1) / (dist * dist); 
+            force.mult(strength);
+            rocket.applyForce(force);
+
+            // Collision (Reduced collision radius for smaller rocket: 3)
+            // For irregular asteroids, we still use circular radius approx for simplicity/performance
+            if (dist < b.radius + 3) { 
+                // Store position before rocket might be nulled
+                let rx = rocket.pos.x;
+                let ry = rocket.pos.y;
+
+                if (b.type === 'target_end') {
+                    endGame(true, 'landed');
+                } else if (b.type === 'target_start') {
+                        if (rocket.age > 100) {
+                            endGame(false, 'crashed');
+                        } else {
+                            // Still launching, ignore collision
+                            continue; 
+                        }
+                } else {
+                    endGame(false, 'crashed');
                 }
+                
+                // If we get here, collision happened and game ended
+                spawnExplosion(rx, ry, b.color);
+                rocket = null; // Ensure null if not already
+                return; 
             }
         }
 
-        // Rocket Physics
-        if (rocket) {
-            // Apply Manual Thrust
-            if (isThrusting && rocket.fuel > 0) {
-                let target = new Vector(mouse.x, mouse.y);
-                let force = target.sub(rocket.pos);
-                force.normalize();
-                force.mult(THRUST_POWER);
-                rocket.applyForce(force);
-                rocket.fuel -= 0.8;
-                if(rocket.fuel < 0) rocket.fuel = 0;
-                
-                if (frameCount % 3 === 0) {
-                     let exhaust = force.copy();
-                     exhaust.mult(-5); 
-                     particles.push(new Particle(rocket.pos.x, rocket.pos.y, '#ffaa00'));
-                }
-            }
-
-            // Update UI Fuel
-            let fuelPct = (rocket.fuel / MAX_FUEL) * 100;
-            fuelBar.style.width = `${fuelPct}%`;
-
-            for (let b of bodies) {
-                let force = b.pos.sub(rocket.pos);
-                let dist = force.mag();
-                
-                force.normalize();
-                let strength = (G * b.mass * 1) / (dist * dist); 
-                force.mult(strength);
-                rocket.applyForce(force);
-
-                if (dist < b.radius + 5) { 
-                    if (b.type === 'target_end') {
-                        endGame(true, 'landed');
-                    } else if (b.type === 'target_start') {
-                         // Fix: Use rocket age instead of trail length to ensure safe launch
-                         if (rocket.age > 100) endGame(false, 'crashed');
-                    } else {
-                        endGame(false, 'crashed');
-                    }
-                    spawnExplosion(rocket.pos.x, rocket.pos.y, b.color);
-                    rocket = null;
-                    return; 
-                }
-            }
-
-            let mars = bodies.find(b => b.type === 'target_end');
-            let d = rocket.pos.sub(mars.pos).mag();
-            if (d < closestDist) {
+        let mars = bodies.find(b => b.type === 'target_end');
+        // Safety check for mars
+        if (mars && rocket) {
+             let d = rocket.pos.sub(mars.pos).mag();
+             if (d < closestDist) {
                 closestDist = d;
                 distanceText.innerText = Math.floor(closestDist);
-            }
+             }
         }
     }
 
@@ -722,28 +829,25 @@
         gameState = 'ENDED';
         isThrusting = false;
         fuelBarContainer.style.display = 'none';
-        lastEndReason = reason;
         
-        // Save ghost trail
-        if (rocket && rocket.trail.length > 0) {
-            ghostTrail = [...rocket.trail];
-        }
+        // Set rocket to null to stop physics loop immediately (Fix infinite coins)
+        let endRocketTrail = rocket ? [...rocket.trail] : [];
+        rocket = null;
+        if (endRocketTrail.length > 0) ghostTrail = endRocketTrail;
 
-        let finalScore = 0;
-        
         if (success) {
-            finalScore = 100;
-            score += finalScore; 
+            let earned = 100;
+            coins += earned;
             msgTitle.innerText = "MARS LANDING!";
             msgTitle.style.color = "#44ff44";
-            msgSub.innerText = `Level Complete! Total Score: ${score}`;
+            msgSub.innerText = `+${earned} Coins!`;
             retryBtn.innerText = "Replay Level";
             nextLevelBtn.style.display = "inline-block";
         } else {
-            let approachScore = Math.max(0, 100 - Math.floor(closestDist / 2));
-            if (reason === 'crashed') approachScore = Math.floor(approachScore / 2); 
-            finalScore = approachScore;
-            
+            let distScore = Math.max(0, 50 - Math.floor(closestDist / 2));
+            if (reason === 'crashed') distScore = 0;
+            coins += distScore;
+
             if (reason === 'lost_space') {
                 msgTitle.innerText = "LOST IN SPACE";
                 msgTitle.style.color = "#ffaa00";
@@ -751,18 +855,20 @@
                 msgTitle.innerText = "CRASHED";
                 msgTitle.style.color = "#ff4444";
             }
-            msgSub.innerText = `Closest Approach: ${Math.floor(closestDist)} | Points: ${finalScore}`;
+            msgSub.innerText = `Closest: ${Math.floor(closestDist)} | Earned: ${distScore} Coins`;
             retryBtn.innerText = "Try Again";
             nextLevelBtn.style.display = "none";
         }
 
-        scoreText.innerText = score;
+        coinText.innerText = coins;
         messageOverlay.style.display = 'block';
     }
 
     function getLaunchVector() {
         let earth = bodies.find(b => b.type === 'target_start');
         if(!earth) return { vec: new Vector(0,0), power: 0 };
+        
+        const stats = getStats();
 
         let target = new Vector(mouse.x, mouse.y);
         let dir = target.sub(earth.pos);
@@ -770,58 +876,59 @@
         dir.normalize();
 
         let powerRatio = Math.min(dist, MAX_INPUT_DIST) / MAX_INPUT_DIST;
-        let force = MIN_LAUNCH_FORCE + (MAX_LAUNCH_FORCE - MIN_LAUNCH_FORCE) * powerRatio;
+        let force = stats.launchForceMin + (stats.launchForceMax - stats.launchForceMin) * powerRatio;
 
         let launchVel = dir.copy();
         launchVel.mult(force);
         
-        if(earth.vel) {
-            launchVel.add(earth.vel);
-        }
+        // Add Earth's orbital velocity
+        if(earth.vel) launchVel.add(earth.vel);
         
         return { vec: launchVel, power: powerRatio };
     }
-    
-    function drawOffscreenIndicator() {
-        if (!rocket) return;
-        let mars = bodies.find(b => b.type === 'target_end');
-        if (!mars) return;
-        
-        if (mars.pos.x >= 0 && mars.pos.x <= width && mars.pos.y >= 0 && mars.pos.y <= height) {
-            return; 
+
+    // --- STORE LOGIC ---
+    window.openStore = () => {
+        storeModal.style.display = 'block';
+        renderStore();
+    };
+    window.closeStore = () => {
+        storeModal.style.display = 'none';
+    };
+    window.buyUpgrade = (type) => {
+        let u = upgrades[type];
+        if (u.level < u.max && coins >= u.cost) {
+            coins -= u.cost;
+            u.level++;
+            u.cost = Math.floor(u.cost * 1.5);
+            coinText.innerText = coins;
+            renderStore();
         }
+    };
 
-        let angle = Math.atan2(mars.pos.y - rocket.pos.y, mars.pos.x - rocket.pos.x);
-        
-        let cx = width / 2;
-        let cy = height / 2;
-        let r = Math.min(width, height) / 2 - 40; 
-        
-        let ax = cx + Math.cos(angle) * r;
-        let ay = cy + Math.sin(angle) * r;
-
-        ctx.save();
-        ctx.translate(ax, ay);
-        ctx.rotate(angle);
-        
-        ctx.beginPath();
-        ctx.moveTo(10, 0);
-        ctx.lineTo(-10, -10);
-        ctx.lineTo(-10, 10);
-        ctx.closePath();
-        ctx.fillStyle = '#ff5e62';
-        ctx.fill();
-        
-        ctx.font = "10px Courier New";
-        ctx.fillStyle = "#fff";
-        ctx.fillText("TARGET", -20, 20);
-        
-        ctx.restore();
+    function renderStore() {
+        upgradesList.innerHTML = '';
+        for (let key in upgrades) {
+            let u = upgrades[key];
+            let row = document.createElement('div');
+            row.className = 'upgrade-row';
+            
+            let btnText = u.level >= u.max ? "MAX" : `Buy (${u.cost}c)`;
+            let disabled = (u.level >= u.max || coins < u.cost) ? "opacity:0.5; pointer-events:none;" : "";
+            
+            row.innerHTML = `
+                <div class="upgrade-info">
+                    <span class="upgrade-name">${u.name} (Lvl ${u.level})</span>
+                </div>
+                <button class="buy-btn" style="${disabled}" onclick="buyUpgrade('${key}')">${btnText}</button>
+            `;
+            upgradesList.appendChild(row);
+        }
     }
 
     let frameCount = 0;
     function loop() {
-        // Screen shake
+        // Shake
         let shakeX = 0, shakeY = 0;
         if(shakeStrength > 0) {
             shakeX = (Math.random() - 0.5) * shakeStrength;
@@ -832,13 +939,12 @@
 
         ctx.save();
         ctx.translate(shakeX, shakeY);
-
         ctx.fillStyle = '#050510';
         ctx.fillRect(-shakeX, -shakeY, width, height);
 
+        // Stars
         for(let s of stars) {
             if(Math.random() < 0.01) s.alpha = Math.random() * 0.8 + 0.2;
-            
             ctx.fillStyle = `rgba(255, 255, 255, ${s.alpha})`;
             ctx.beginPath();
             ctx.arc(s.x, s.y, s.size, 0, Math.PI*2);
@@ -852,7 +958,7 @@
             b.draw();
         }
 
-        // Draw Ghost Trail
+        // Ghost
         if (ghostTrail.length > 1) {
             ctx.beginPath();
             ctx.strokeStyle = '#00ffff'; 
@@ -881,32 +987,24 @@
                 ctx.stroke();
                 ctx.setLineDash([]);
 
-                let powerPct = Math.floor(power * 100);
-                ctx.fillStyle = '#fff';
-                ctx.font = '12px Courier New';
-                ctx.fillText(`PWR: ${powerPct}%`, mouse.x + 10, mouse.y);
-
+                // Prediction (Simple gravity)
                 ctx.beginPath();
                 ctx.moveTo(earth.pos.x, earth.pos.y);
-                
                 let simPos = earth.pos.copy();
                 let dir = new Vector(mouse.x, mouse.y).sub(earth.pos);
                 dir.normalize();
-                simPos.add(dir.mult(earth.radius + 5)); 
-
+                simPos.add(dir.mult(earth.radius + 15)); 
                 let simVel = vec.copy();
                 
                 for(let i=0; i<15; i++) {
                     let sun = bodies.find(b => b.type === 'sun');
                     if (!sun) break;
-
                     let f = sun.pos.sub(simPos);
                     let d = f.mag();
                     f.normalize();
                     let s = (G * sun.mass * 1) / (d*d);
                     f.mult(s);
                     simVel.add(f);
-
                     simPos.add(simVel);
                     ctx.lineTo(simPos.x, simPos.y);
                 }
@@ -919,12 +1017,8 @@
         if (rocket) {
             rocket.update();
             rocket.draw();
-            drawOffscreenIndicator();
-
             let centerDist = new Vector(rocket.pos.x - cx, rocket.pos.y - cy).mag();
-            if (centerDist > Math.max(width, height) * 2) { 
-                endGame(false, 'lost_space');
-            }
+            if (centerDist > Math.max(width, height) * 2) endGame(false, 'lost_space');
         }
 
         for(let i = particles.length -1; i>=0; i--) {
@@ -934,9 +1028,18 @@
         }
 
         ctx.restore();
-
         frameCount++;
         animationFrameId = requestAnimationFrame(loop);
+    }
+
+    function updateMouse(e) {
+        if (e.type.includes('touch') && e.touches.length > 0) {
+            mouse.x = e.touches[0].clientX;
+            mouse.y = e.touches[0].clientY;
+        } else if (e.clientX !== undefined) {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+        }
     }
 
     function inputStart(e) {
@@ -950,65 +1053,53 @@
         if (gameState === 'FLYING') {
             isThrusting = false;
         } else if (gameState === 'IDLE') {
-            if (e.target.tagName !== 'BUTTON') {
+            // Prevent launch if clicking dropdown
+            if (e.target.tagName !== 'BUTTON' && e.target.tagName !== 'SELECT' && !storeModal.contains(e.target)) {
                 launch(e);
             }
         }
     }
 
-    function updateMouse(e) {
-        if (e.type.includes('touch') && e.touches.length > 0) {
-            mouse.x = e.touches[0].clientX;
-            mouse.y = e.touches[0].clientY;
-        } else if (e.clientX !== undefined) {
-            mouse.x = e.clientX;
-            mouse.y = e.clientY;
-        }
-    }
-
     function launch(e) {
         let earth = bodies.find(b => b.type === 'target_start');
-        
+        const stats = getStats();
+
         updateMouse(e);
         let { vec } = getLaunchVector();
 
-        rocket = new Body(earth.pos.x, earth.pos.y, 1, 3, '#fff', false, 'rocket');
+        // Small rocket mass: 1, radius: 4 (visually matches draw)
+        rocket = new Body(earth.pos.x, earth.pos.y, 1, 4, '#fff', false, 'rocket');
         rocket.vel = vec;
+        rocket.fuel = stats.maxFuel;
 
         let dir = vec.copy();
         dir.normalize();
-        
-        // Fix: Increased spawn offset to prevent immediate collision
         let spawnOffset = dir.copy();
-        spawnOffset.mult(earth.radius + 15);
+        // Safe spawn distance
+        spawnOffset.mult(earth.radius + 20);
         rocket.pos.add(spawnOffset);
 
         gameState = 'FLYING';
-        statusText.innerText = "Click to Thrust! (Limited Fuel)";
+        statusText.innerText = "Hold Click to Thrust!";
         statusText.style.color = "#ffaa00";
         fuelBarContainer.style.display = 'block';
-        aiText.classList.remove('visible');
     }
 
     window.addEventListener('mousemove', updateMouse);
     window.addEventListener('touchmove', updateMouse);
-
     window.addEventListener('mousedown', inputStart);
     window.addEventListener('touchstart', inputStart);
-
     window.addEventListener('mouseup', inputEnd);
     window.addEventListener('touchend', inputEnd);
-
     window.addEventListener('resize', resize);
     
     retryBtn.addEventListener('click', () => resetGame('stay'));
     nextLevelBtn.addEventListener('click', () => resetGame('next'));
-    
-    flightAiBtn.addEventListener('click', (e) => { e.stopPropagation(); callFlightAI(); });
-    reportBtn.addEventListener('click', (e) => { e.stopPropagation(); generateMissionReport(); });
+    resetLevelBtn.addEventListener('click', () => resetGame('stay'));
+    storeToggleBtn.addEventListener('click', (e) => { e.stopPropagation(); openStore(); });
 
     resize();
-    createSolarSystem(); 
+    createSolarSystem();
     loop();
 })();
 </script>
