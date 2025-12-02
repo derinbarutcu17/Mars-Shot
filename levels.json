@@ -1,0 +1,63 @@
+{
+  "levels": [
+    {
+      "id": 1,
+      "name": "Level 1",
+      "asteroidCount": 3,
+      "asteroidMinSize": 6,
+      "asteroidMaxSize": 10,
+      "difficulty": "easy",
+      "description": "Learn the basics of orbital mechanics"
+    },
+    {
+      "id": 2,
+      "name": "Level 2",
+      "asteroidCount": 8,
+      "asteroidMinSize": 8,
+      "asteroidMaxSize": 14,
+      "difficulty": "medium",
+      "description": "Avoid more obstacles on your journey"
+    },
+    {
+      "id": 3,
+      "name": "Level 3",
+      "asteroidCount": 14,
+      "asteroidMinSize": 10,
+      "asteroidMaxSize": 18,
+      "difficulty": "hard",
+      "description": "Navigate through dense asteroid fields"
+    },
+    {
+      "id": 4,
+      "name": "Level 4",
+      "asteroidCount": 20,
+      "asteroidMinSize": 8,
+      "asteroidMaxSize": 22,
+      "difficulty": "extreme",
+      "description": "The ultimate test of your piloting skills"
+    }
+  ],
+  "upgrades": {
+    "fuel": {
+      "name": "Fuel Tank",
+      "baseCost": 50,
+      "costMultiplier": 1.5,
+      "maxLevel": 5,
+      "description": "Increases fuel capacity per level"
+    },
+    "thrust": {
+      "name": "Ion Engine",
+      "baseCost": 80,
+      "costMultiplier": 1.5,
+      "maxLevel": 5,
+      "description": "Increases thrust power per level"
+    },
+    "launch": {
+      "name": "Catapult",
+      "baseCost": 60,
+      "costMultiplier": 1.5,
+      "maxLevel": 5,
+      "description": "Increases launch force per level"
+    }
+  }
+}
