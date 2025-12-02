@@ -309,6 +309,7 @@ p {
     backdrop-filter: blur(5px);
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
     animation: slideIn 0.3s ease-out;
+    pointer-events: auto;
 }
 
 @keyframes slideIn {
@@ -338,7 +339,7 @@ p {
 
 #message {
     border-color: var(--color-accent-cyan);
-    pointer-events: none;
+    pointer-events: auto;
 }
 
 #message.success {

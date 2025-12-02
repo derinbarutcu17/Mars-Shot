@@ -433,9 +433,15 @@ class Particle {
 // ===================================
 
 function calculateGravity() {
-    if (!physics.rocket) return;
+    try {
+        // If there's no rocket or no bodies, nothing to calculate
+        if (!physics.rocket) return;
+        if (!physics.bodies || physics.bodies.length === 0) {
+            // No bodies yet (maybe still initializing) — skip gravity calculations
+            return;
+        }
 
-    const stats = UpgradeSystem.getStats();
+        const stats = UpgradeSystem.getStats();
     const localG = GameConfig.G_BASE * gameData.scaleFactor;
 
     // Thrust application
@@ -456,13 +462,24 @@ function calculateGravity() {
         }
     }
 
-    // Update fuel bar
-    const fuelPct = (physics.rocket.fuel / stats.maxFuel) * 100;
-    document.getElementById('fuelBar').style.width = `${fuelPct}%`;
+    // Update fuel bar (safely)
+    try {
+        const fuelBarEl = document.getElementById('fuelBar');
+        if (fuelBarEl && typeof physics.rocket.fuel === 'number') {
+            const fuelPct = (physics.rocket.fuel / stats.maxFuel) * 100;
+            fuelBarEl.style.width = `${fuelPct}%`;
+        }
+    } catch (e) {
+        console.debug('Failed to update fuel bar:', e);
+    }
 
     // Gravity from all bodies
     for (const body of physics.bodies) {
+        if (!body || !body.pos) continue;
         if (body.type === 'rocket') continue;
+
+        // Guard against rocket being removed mid-loop
+        if (!physics.rocket || !physics.rocket.pos) continue;
 
         const force = body.pos.sub(physics.rocket.pos);
         let dist = force.mag();
@@ -491,20 +508,29 @@ function calculateGravity() {
             } else {
                 endGame(false, 'crashed');
             }
-            spawnExplosion(physics.rocket.pos.x, physics.rocket.pos.y, body.color);
+                // safe explosion spawn
+                if (physics.rocket && physics.rocket.pos) {
+                    spawnExplosion(physics.rocket.pos.x, physics.rocket.pos.y, body.color);
+                }
             physics.rocket = null;
             return;
         }
     }
 
-    // Update closest distance to Mars
-    const mars = physics.bodies.find(b => b.type === 'target_end');
-    if (mars && physics.rocket) {
-        const d = physics.rocket.pos.sub(mars.pos).mag();
-        if (d < gameState.closestDist) {
-            gameState.closestDist = d;
-            document.getElementById('distanceText').innerText = Math.floor(gameState.closestDist);
+        // Update closest distance to Mars
+        const mars = physics.bodies.find(b => b.type === 'target_end');
+        if (mars && physics.rocket) {
+            const d = physics.rocket.pos.sub(mars.pos).mag();
+            if (d < gameState.closestDist) {
+                gameState.closestDist = d;
+                document.getElementById('distanceText').innerText = Math.floor(gameState.closestDist);
+            }
         }
+    } catch (err) {
+        console.error('calculateGravity error:', err);
+        console.log('physics.rocket:', physics.rocket);
+        console.log('physics.bodies:', physics.bodies && physics.bodies.map(b => b ? b.type : b));
+        return;
     }
 }
 
@@ -810,6 +836,14 @@ function resetGame(action) {
     document.getElementById('distanceText').innerText = "--";
 
     createSolarSystem();
+    // Log reset for debugging
+    console.log('resetGame()', { action, width: gameData.width, height: gameData.height });
+
+    // Reset timing accumulator so the fixed-step loop doesn't try to consume a large delta
+    gameData.lastTimestamp = performance.now() / 1000;
+    gameData.accumulator = 0;
+
+    console.log('after createSolarSystem bodies:', physics.bodies.map(b => b ? b.type : b));
     document.getElementById('statusText').innerText = "Aim & Drag to Launch";
     document.getElementById('statusText').style.color = "#fff";
 }
@@ -890,6 +924,13 @@ function createSolarSystem() {
         const speed = 0.002 + Math.random() * 0.004;
         asteroid.orbitSpeed = Math.random() > 0.5 ? speed : -speed;
         physics.bodies.push(asteroid);
+    }
+
+    // Debug: log the types of bodies created
+    try {
+        console.log('createSolarSystem: bodies created ->', physics.bodies.map(b => b.type));
+    } catch (e) {
+        console.log('createSolarSystem: error listing bodies', e);
     }
 }
 
