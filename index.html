@@ -3,29 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="description" content="Mars Shot: Orbital Injection - A space navigation game featuring gravity-based physics">
-    <meta name="theme-color" content="#050510">
-    
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
     <title>Mars Shot: Orbital Injection</title>
-    
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <main id="gameContainer">
-        <!-- Loading Screen -->
-        <div id="loadingOverlay" aria-label="Loading game">
+        <div id="loadingOverlay">
             <div class="loading-spinner">
                 <div class="spinner"></div>
-                <p class="loading-text">Loading Mars Shot...</p>
+                <p style="color:#00d2ff; font-weight:bold;">Loading...</p>
             </div>
         </div>
 
-        <!-- Game Canvas -->
-        <canvas id="gameCanvas" width="800" height="600" aria-label="Game viewport"></canvas>
+        <canvas id="gameCanvas"></canvas>
 
-        <!-- Level Selector -->
-        <section id="levelSelectContainer" aria-label="Level selection">
-            <select id="levelSelect" aria-label="Select game level">
+        <section id="levelSelectContainer">
+            <select id="levelSelect">
                 <option value="1">Level 1</option>
                 <option value="2">Level 2</option>
                 <option value="3">Level 3</option>
@@ -33,50 +28,39 @@
             </select>
         </section>
 
-        <!-- HUD / Game Information -->
-        <section id="ui" aria-label="Game status information">
+        <section id="ui">
             <h1>MARS SHOT</h1>
-            <p>Coins: <span id="coinText" aria-label="Current coins">0</span></p>
-            <p><span id="statusText" aria-label="Current game status">Ready</span></p>
-            <p>Closest: <span id="distanceText" aria-label="Closest distance to Mars">--</span></p>
-            
-            <!-- Fuel Bar -->
-            <div id="fuelBarContainer" aria-label="Fuel capacity indicator" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100">
-                <div id="fuelBar"></div>
-            </div>
+            <p>Coins: <span id="coinText">0</span></p>
+            <p><span id="statusText">Ready</span></p>
+            <p>Closest: <span id="distanceText">--</span></p>
+            <div id="fuelBarContainer"><div id="fuelBar"></div></div>
         </section>
 
-        <!-- Control Buttons -->
-        <button id="resetLevelBtn" aria-label="Reset current level">↺ RESET</button>
-        <button id="storeToggleBtn" aria-label="Open upgrade shop">SHOP</button>
-        <button id="pauseBtn" aria-label="Pause game">⏸ PAUSE</button>
+        <button id="resetLevelBtn">↺ RESET</button>
+        <button id="storeToggleBtn">SHOP</button>
+        <button id="pauseBtn">⏸ PAUSE</button>
 
-        <!-- Store Modal -->
-        <aside id="storeModal" class="modal" aria-labelledby="storeTitle" role="dialog" aria-modal="true">
+        <aside id="storeModal" class="modal">
             <h2 id="storeTitle">WORKSHOP</h2>
-            <div id="upgradesList" role="list"></div>
-            <button class="btn" id="storeCloseBtn" aria-label="Close shop">Close</button>
+            <div id="upgradesList"></div>
+            <button class="btn" id="storeCloseBtn">Close</button>
         </aside>
 
-        <!-- Game Over / Mission Complete Modal -->
-        <section id="message" class="modal" aria-labelledby="msgTitle" role="dialog" aria-modal="true">
+        <section id="message" class="modal">
             <h2 id="msgTitle">MISSION COMPLETE</h2>
             <p id="msgSub">Score: 100</p>
             <br>
-            <button class="btn" id="retryBtn" aria-label="Retry current level">Try Again</button>
-            <button class="btn green-btn" id="nextLevelBtn" style="display:none;" aria-label="Proceed to next level">Next Level</button>
+            <button class="btn" id="retryBtn">Try Again</button>
+            <button class="btn green-btn" id="nextLevelBtn" style="display:none;">Next Level</button>
         </section>
 
-        <!-- Pause Menu -->
-        <aside id="pauseMenu" class="modal" aria-labelledby="pauseTitle" role="dialog" aria-modal="true">
+        <aside id="pauseMenu" class="modal">
             <h2 id="pauseTitle">PAUSED</h2>
-            <p>Game paused. Choose an action:</p>
-            <button class="pause-menu-btn" id="pauseResumeBtn" aria-label="Resume game">Resume</button>
-            <button class="pause-menu-btn" id="pauseRestartBtn" aria-label="Restart level">Restart Level</button>
+            <p>Game paused.</p>
+            <button class="pause-menu-btn" id="pauseResumeBtn">Resume</button>
+            <button class="pause-menu-btn" id="pauseRestartBtn">Restart Level</button>
         </aside>
     </main>
-
-    <!-- Scripts -->
     <script src="game.js"></script>
 </body>
 </html>
